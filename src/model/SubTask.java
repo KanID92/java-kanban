@@ -3,18 +3,15 @@ package model;;
 public class SubTask extends Task {
 
 
-    private Epic epicAffilation;
+    private int epicId;
 
-    public SubTask(int id, String name, String description) {
-        super(id, name, description);
+    public SubTask(String name, String description, int epicId) {
+        super(name, description);
+        this.epicId = epicId;
     }
 
-    public Epic getEpicAffilation() {
-        return epicAffilation;
-    }
-
-    public void setEpicAffilation(Epic epic) {
-        this.epicAffilation = epic;
+    public int getEpicId() {
+        return epicId;
     }
 
 }
