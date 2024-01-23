@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 public class Epic extends Task {
@@ -20,16 +21,38 @@ public class Epic extends Task {
     }
 
     public void removeSubtaskFromEpic(int id) {
-        for (int subtaskId : subtaskIDs) {
-            if (subtaskId == id){
-                subtaskIDs.remove(id);
-            }
-        }
-
+        subtaskIDs.remove(Integer.valueOf(id));
     }
 
     public void removeAllSubtaskFromEpic() {
         subtaskIDs.clear();
+    }
+
+    @Override
+    public String toString() {
+        return "Epic{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", id=" + id +
+                ", progress=" + progress +
+                ", subtaskIds=" + subtaskIDs +
+                '}';
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, description, id, progress, subtaskIDs);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Epic epic = (Epic) o;
+        return id == epic.id && Objects.equals(name, epic.name) &&
+                Objects.equals(description, epic.description) &&
+                progress == epic.progress &&
+                Objects.equals(subtaskIDs, epic.subtaskIDs);
     }
 
 }
