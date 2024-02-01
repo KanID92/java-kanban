@@ -28,7 +28,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     private int counter = 0;
 
-    public int getId() {
+    private int getId() {
         return ++counter;
     }
 
@@ -78,10 +78,10 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public SubTask getSubtaskByID(int id) { //получение Epic задачи по id
+    public SubTask getSubtaskByID(int id) { //получение подзадачи по id
         SubTask subTask = subTasks.get(id);
         historyManager.add(subTask);
-        return subTasks.get(id);
+        return subTask;
     }
 
 

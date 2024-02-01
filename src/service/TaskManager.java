@@ -10,9 +10,6 @@ import java.util.List;
 
 public interface TaskManager {
 
-
-    int getId();
-
     List<Task> getTaskList();
 
     List<Epic> getEpicList();

@@ -19,9 +19,12 @@ class InMemoryTaskManagerTest {
         taskManager.createEpic(new Epic("Эпик №2", "Эпик №2 для проверки"));
         taskManager.createSubtask(new SubTask("Подзадача №3", "Подзадача №3 для проверки",2));
 
-        Assertions.assertTrue(taskManager.getTaskList().contains(taskManager.getTaskByID(1)));
-        Assertions.assertTrue(taskManager.getEpicList().contains(taskManager.getEpicByID(2)));
-        Assertions.assertTrue(taskManager.getSubtaskList().contains(taskManager.getSubtaskByID(3)));
+        Assertions.assertTrue(taskManager.getTaskList().contains(taskManager.getTaskByID(1)),
+                "Задача получена");
+        Assertions.assertTrue(taskManager.getEpicList().contains(taskManager.getEpicByID(2)),
+                "Эпик получен");
+        Assertions.assertTrue(taskManager.getSubtaskList().contains(taskManager.getSubtaskByID(3)),
+                "Подзадача получена");
     }
 
 

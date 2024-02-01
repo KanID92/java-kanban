@@ -15,8 +15,8 @@ class EpicTest {
     @BeforeEach
     void beforeEach() {
         taskManager.createEpic(new Epic("Эпик № 1", "Эпик № 1 для теста"));
-        taskManager.createTask(new Epic("Эпик № 2", "Эпик № 2 для теста"));
-        taskManager.createTask(new Epic("Эпик № 3", "Эпик № 3 для теста"));
+        taskManager.createEpic(new Epic("Эпик № 2", "Эпик № 2 для теста"));
+        taskManager.createEpic(new Epic("Эпик № 3", "Эпик № 3 для теста"));
         taskManager.createSubtask(new SubTask("Подзадача №2.1", "Подзадача №2.1 для теста", 2));
         taskManager.createSubtask(new SubTask("Подзадача №2.2", "Подзадача №2.2 для теста", 2));
     }
@@ -25,18 +25,19 @@ class EpicTest {
     void shouldBeEqualsEpicsWithTheSameIds() {
         Epic epic1 =  taskManager.getEpicByID(1);
         Epic epic2 =  taskManager.getEpicByID(1);
-        Assertions.assertEquals(epic1 , epic2);
+        assertEquals(epic1 , epic2, "Равны задачи с одинаковым ID");
     }
     @Test
     void shouldSetName() {
         taskManager.getEpicByID(3).setName("Задача 3а");
-        Assertions.assertEquals("Задача 3а", taskManager.getEpicByID(3).getName());
+        assertEquals("Задача 3а", taskManager.getEpicByID(3).getName(), "Задача переименована");
     }
 
     @Test
     void shouldNotAddEpicForTheSameEpicLikeASubtask() {
         taskManager.getEpicByID(2).addSubtaskIdToEpic(2);
-        Assertions.assertFalse(taskManager.getEpicSubtasks(2).contains(taskManager.getEpicByID(2)));
+        assertFalse(taskManager.getEpicSubtasks(2).contains(taskManager.getEpicByID(2)),
+                "Эпик нельзя добавить как подзадачу самому себе");
     }
 
 }

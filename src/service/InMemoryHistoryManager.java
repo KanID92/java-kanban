@@ -5,20 +5,23 @@ import java.util.LinkedList;
 
 public class InMemoryHistoryManager implements HistoryManager {
 
-    private final LinkedList<Task> last10TasksList = new LinkedList<>();
+    private final LinkedList<Task> lastTasksList = new LinkedList<>();
 
     @Override
     public void add(Task task) { // добавление задачи в лист истории запросов задач (в конец)
-            if (last10TasksList.size() == 10) {
-                last10TasksList.removeFirst();
+           if (task == null) {
+               return;
+           } else if (lastTasksList.size() == 10) {
+                lastTasksList.removeFirst();
             }
-            last10TasksList.addLast(task);
+            lastTasksList.addLast(task);
+
         }
 
 
     @Override
     public List<Task> getHistory() {
-        return last10TasksList;
+        return new LinkedList<>(lastTasksList);
     }
 
 }
