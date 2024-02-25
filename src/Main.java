@@ -3,6 +3,7 @@ import model.SubTask;
 import model.Task;
 import service.Managers;
 import service.TaskManager;
+
 import java.util.List;
 
 public class Main {
@@ -11,21 +12,20 @@ public class Main {
         System.out.println("Поехали!");
 
         Managers manager = new Managers();
-        TaskManager taskManager = manager.getDefault();
+        TaskManager taskManager = Managers.getDefault();
 
         int task1Id = taskManager.createTask(new Task("Лампочка",
                 "Съездить на станцию ТО, и заменить лампочку в задней фаре"));
         int task2Id = taskManager.createTask(new Task("Елка",
-                "Убрать елку") );
+                "Убрать елку"));
 
         int epic1Id = taskManager.createEpic(new Epic("Спринт №4",
                 "Закончить спринт №4 от ЯП"));
 
-        int subtask1Id = taskManager.createSubtask(new SubTask("Теория №4","Закончить теорию спринта",
+        int subtask1Id = taskManager.createSubtask(new SubTask("Теория №4", "Закончить теорию спринта",
                 epic1Id));
-        int subtask2Id = taskManager.createSubtask(new SubTask("Финальное задание №4","Выполнить задание 4-го спринта",
+        int subtask2Id = taskManager.createSubtask(new SubTask("Финальное задание №4", "Выполнить задание 4-го спринта",
                 epic1Id));
-
 
 
         // проверка получения подзадач эпика
@@ -34,7 +34,7 @@ public class Main {
 
         taskManager.updateTask(new Task("Задняя фара", "Купить заднюю фару")); // Обновление обычной задачи
         taskManager.updateSubtask(new SubTask("Теория №4", "Закончить теорию спринта", epic1Id));
-        taskManager.updateSubtask(new SubTask("Финальное задание №4","Выполнить задание 4-го спринта",epic1Id));
+        taskManager.updateSubtask(new SubTask("Финальное задание №4", "Выполнить задание 4-го спринта", epic1Id));
 
         System.out.println("Поехали добавлять историю");
         taskManager.getSubtaskByID(5);
@@ -71,7 +71,7 @@ public class Main {
         }
 
         //проверка обновления Эпика
-        taskManager.updateEpic(new Epic("Ревью 4-го спринта", "Отправить материалы через GitHub" ));
+        taskManager.updateEpic(new Epic("Ревью 4-го спринта", "Отправить материалы через GitHub"));
 
         //проверка удаления обычной задачи
         taskManager.deleteTaskByID(task2Id);

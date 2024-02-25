@@ -10,7 +10,6 @@ public class Task {
     protected Progress progress;
 
 
-
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
