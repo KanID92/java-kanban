@@ -7,7 +7,6 @@ import model.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 
@@ -148,17 +147,20 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllTasks() {  //удаление всех обычных задач
-        tasks.clear();
+        tasks.clear(); // удаление самих задач;
     }
 
     @Override
     public void deleteAllEpics() {  //удаление всех Эпиков
+        deleteTasksFromHistory(subTasks);
+        deleteTasksFromHistory(epics);
         subTasks.clear(); //удаление всех подзадач
-        epics.clear();
+        epics.clear(); //удаление всех эпиков;
     }
 
     @Override
     public void deleteAllSubtasks() {  //удаление всех Подзадач
+        deleteTasksFromHistory(subTasks);
         subTasks.clear();
         for (Epic epic : epics.values()) { // удаление
             epic.removeAllSubtaskFromEpic();
@@ -167,6 +169,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteTaskByID(int id) {
+        historyManager.remove(id);
         tasks.remove(id);
     }
 
@@ -175,8 +178,10 @@ public class InMemoryTaskManager implements TaskManager {
         if (epics.containsKey(epicId)) {
             Epic epic = epics.get(epicId);
             for (int subtaskId : epic.getAllEpicSubtasksIds()) { // сначала удаление всех подзадач.
+                historyManager.remove(subtaskId);
                 subTasks.remove(subtaskId); // удаление подзадачи в общем списке
             }
+            historyManager.remove(epicId);
             epics.remove(epicId);
         }
     }
@@ -189,6 +194,7 @@ public class InMemoryTaskManager implements TaskManager {
 
             epic.removeSubtaskFromEpic(subtaskId);
 
+            historyManager.remove(subtaskId);
             subTasks.remove(subtaskId);
             changeEpicProgress(epicId);
         }
@@ -229,4 +235,16 @@ public class InMemoryTaskManager implements TaskManager {
     public List<Task> getHistory() {
         return historyManager.getHistory();
     }
+
+    <T> void deleteTasksFromHistory(HashMap<Integer, T> map) {
+        ArrayList<Integer> historyRemoveList = new ArrayList<>(map.keySet());
+        for (int id : historyRemoveList) {
+            historyManager.remove(id);
+        }
+    }
+
+    public HistoryManager getHistoryManager() { // для тестов
+        return historyManager;
+    }
+
 }
