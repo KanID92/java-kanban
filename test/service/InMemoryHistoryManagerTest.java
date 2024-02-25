@@ -1,10 +1,10 @@
 package service;
 
-import java.util.List;
 import model.Task;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,7 +19,7 @@ class InMemoryHistoryManagerTest {
 
     @BeforeEach
     void beforeEach() {
-        taskTest1Id = taskManager.createTask(new Task("Задача №1","Задача №1 на проверку сохранения"));
+        taskTest1Id = taskManager.createTask(new Task("Задача №1", "Задача №1 на проверку сохранения"));
         taskTest1 = taskManager.getTaskByID(taskTest1Id);
         taskTest2Id = taskManager.createTask(new Task("Задача №1.1", "Задача №1.1 на проверку сохранения"));
         taskTest2 = taskManager.getTaskByID(taskTest2Id);

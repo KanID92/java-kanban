@@ -1,7 +1,9 @@
 package service;
+
 import model.Task;
-import java.util.List;
+
 import java.util.LinkedList;
+import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
 
@@ -9,14 +11,14 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void add(Task task) { // добавление задачи в лист истории запросов задач (в конец)
-           if (task == null) {
-               return;
-           } else if (lastTasksList.size() == 10) {
-                lastTasksList.removeFirst();
-            }
-            lastTasksList.addLast(task);
-
+        if (task == null) {
+            return;
+        } else if (lastTasksList.size() == 10) {
+            lastTasksList.removeFirst();
         }
+        lastTasksList.addLast(task);
+
+    }
 
 
     @Override
