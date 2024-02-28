@@ -49,6 +49,5 @@ public interface TaskManager {
 
     List<Task> getHistory();
 
-    HistoryManager getHistoryManager(); // для тестов
 
 }

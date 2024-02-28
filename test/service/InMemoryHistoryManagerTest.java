@@ -14,14 +14,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class InMemoryHistoryManagerTest {
 
     TaskManager taskManager = Managers.getDefault();
-    int taskTest1Id;
-    int taskTest2Id;
-    int taskTest3Id;
     Task taskTest1;
     Task taskTest2;
     Task taskTest3;
 
-    int epicTest1Id;
     Epic epicTest1;
     int subTaskTest1Id;
     SubTask subTaskTest1;
@@ -29,20 +25,21 @@ class InMemoryHistoryManagerTest {
 
     @BeforeEach
     void beforeEach() {
-        taskTest1Id = taskManager.createTask(new Task("Задача №1", "Для тестов"));
-        taskTest1 = taskManager.getTaskByID(taskTest1Id); // вызов 1 задачи
+        taskTest1 = taskManager.getTaskByID(taskManager.createTask(new Task("Задача №1", "Для тестов")));
+        // вызов 1 задачи
 
-        taskTest2Id = taskManager.createTask(new Task("Задача №2", "Для тестов"));
-        taskTest2 = taskManager.getTaskByID(taskTest2Id); // вызов 2 задачи
+        taskTest2 = taskManager.getTaskByID(taskManager.createTask(new Task("Задача №2", "Для тестов")));
+        // вызов 2 задачи
 
-        taskTest3Id = taskManager.createTask(new Task("Задача №3", "Для тестов"));
-        taskTest3 = taskManager.getTaskByID(taskTest2Id); // вызов 3 задачи
+        taskTest3 = taskManager.getTaskByID(taskManager.createTask(new Task("Задача №3", "Для тестов")));
+        // вызов 3 задачи
 
-        epicTest1Id = taskManager.createEpic(new Epic("Задача №4", "Для тестов"));
-        epicTest1 = taskManager.getEpicByID(epicTest1Id); // вызов 4 задачи
+        epicTest1 = taskManager.getEpicByID(taskManager.createEpic(new Epic("Задача №4", "Для тестов")));
+        // вызов 4 задачи
 
-        subTaskTest1Id = taskManager.createSubtask(new SubTask("Задача №5", "Для тестов", epicTest1Id));
-        subTaskTest1 = taskManager.getSubtaskByID((subTaskTest1Id)); // вызов 5 задачи
+        subTaskTest1 = taskManager.getSubtaskByID((taskManager.createSubtask(
+                new SubTask("Задача №5", "Для тестов", epicTest1.getId()))));
+        // вызов 5 задачи
 
         taskManager.getTaskByID(1); // вызов 1 задачи
         taskManager.getTaskByID(3); // вызов 3 задачи
@@ -54,7 +51,7 @@ class InMemoryHistoryManagerTest {
     @Test
     void shouldSavePreviousAndNewTasksVersions() {
 
-        taskTest2.setId(taskTest1Id);
+        taskTest2.setId(taskTest1.getId());
         taskManager.updateTask(taskTest2);
 
         assertTrue(taskManager.getHistory().contains(taskTest1),
@@ -101,21 +98,38 @@ class InMemoryHistoryManagerTest {
 
     @Test
     void shouldLinkLast() {
-        assertTrue(taskManager.getHistory().contains(subTaskTest1),
+        List<Task> historyList = taskManager.getHistory();
+        assertTrue(historyList.contains(subTaskTest1),
                 "Проверка на наличие последней задачи");
-        assertEquals(taskManager.getHistoryManager().getLast(), taskTest1,
+        assertEquals(historyList.get(historyList.size() - 1), taskTest1,
                 "Проверка записи как последнего значения");
     }
 
     @Test
     void shouldRemoveTaskFromHistory() {
-        taskManager.getHistoryManager().remove(subTaskTest1Id);
+        taskManager.deleteSubtaskByID(subTaskTest1.getId());
         List<Task> tasksHistory = taskManager.getHistory();
         assertFalse(tasksHistory.contains(subTaskTest1));
         assertEquals(tasksHistory.get(3), taskTest1, "Соседний справа элемент истории занял " +
                 "откорректированное положение");
         assertEquals(tasksHistory.get(0), epicTest1, "Соседний слева элемент истории остался в том же положении");
     }
+
+    @Test
+    void shouldNotContainInEpicDeletedSubtask() {
+        int epicId = subTaskTest1.getEpicId();
+        taskManager.deleteSubtaskByID(subTaskTest1Id);
+        assertFalse(taskManager.getEpicByID(epicId).getAllEpicSubtasksIds().contains(subTaskTest1Id));
+    }
+
+    @Test
+    void shouldNotContainInDeletedSubtaskEpicID() {
+        taskManager.deleteSubtaskByID(subTaskTest1.getId());
+        assertEquals(-1, subTaskTest1.getEpicId());
+
+    }
+
+
 
 }
 

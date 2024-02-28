@@ -145,6 +145,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllTasks() {  //удаление всех обычных задач
+        deleteTasksFromHistory(tasks);
         tasks.clear(); // удаление самих задач;
     }
 
@@ -193,6 +194,7 @@ public class InMemoryTaskManager implements TaskManager {
             epic.removeSubtaskFromEpic(subtaskId);
 
             historyManager.remove(subtaskId);
+            subTasks.get(subtaskId).deleteEpicId();
             subTasks.remove(subtaskId);
             changeEpicProgress(epicId);
         }
@@ -242,8 +244,5 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    public HistoryManager getHistoryManager() { // для тестов
-        return historyManager;
-    }
 
 }
