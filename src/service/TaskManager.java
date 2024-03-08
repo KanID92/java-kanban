@@ -1,7 +1,6 @@
 package service;
 
 import model.Epic;
-import model.Progress;
 import model.SubTask;
 import model.Task;
 
@@ -49,4 +48,6 @@ public interface TaskManager {
     ArrayList<SubTask> getEpicSubtasks(int epicId);
 
     List<Task> getHistory();
+
+
 }

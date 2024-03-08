@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 import service.Managers;
 import service.TaskManager;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class SubTaskTest {
     TaskManager taskManager = Managers.getDefault();
 
@@ -25,8 +23,8 @@ class SubTaskTest {
     @Test
     void shouldBeEqualsSubtaskWithTheSameIds() {
 
-        SubTask subtask1 =  taskManager.getSubtaskByID(3);
-        SubTask subtask2 =  taskManager.getSubtaskByID(3);
+        SubTask subtask1 = taskManager.getSubtaskByID(3);
+        SubTask subtask2 = taskManager.getSubtaskByID(3);
         Assertions.assertEquals(subtask1, subtask2);
     }
 
@@ -48,7 +46,7 @@ class SubTaskTest {
     @Test
     void shouldSetId() {
         taskManager.getSubtaskByID(4).setId(10);
-        Assertions.assertEquals(10,taskManager.getSubtaskByID(4).getId());
+        Assertions.assertEquals(10, taskManager.getSubtaskByID(4).getId());
     }
 
     @Test

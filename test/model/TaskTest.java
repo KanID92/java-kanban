@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 import service.Managers;
 import service.TaskManager;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class TaskTest {
     TaskManager taskManager = Managers.getDefault();
 
@@ -22,8 +20,8 @@ class TaskTest {
     @Test
     void shouldBeEqualsTasksWithTheSameIds() {
 
-        Task task1 =  taskManager.getTaskByID(1);
-        Task task2 =  taskManager.getTaskByID(1);
+        Task task1 = taskManager.getTaskByID(1);
+        Task task2 = taskManager.getTaskByID(1);
         Assertions.assertEquals(task1, task2,
                 "Объекты Таск, вызванные по одинаковому ID - одинаковые");
     }
@@ -43,7 +41,7 @@ class TaskTest {
     @Test
     void shouldSetId() {
         taskManager.getTaskByID(3).setId(11);
-        Assertions.assertEquals(11,taskManager.getTaskByID(3).getId(),
+        Assertions.assertEquals(11, taskManager.getTaskByID(3).getId(),
                 "Id назначено");
     }
 

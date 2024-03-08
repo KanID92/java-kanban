@@ -1,12 +1,12 @@
 package model;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import service.Managers;
 import service.TaskManager;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class EpicTest {
 
@@ -23,10 +23,11 @@ class EpicTest {
 
     @Test
     void shouldBeEqualsEpicsWithTheSameIds() {
-        Epic epic1 =  taskManager.getEpicByID(1);
-        Epic epic2 =  taskManager.getEpicByID(1);
-        assertEquals(epic1 , epic2, "Равны задачи с одинаковым ID");
+        Epic epic1 = taskManager.getEpicByID(1);
+        Epic epic2 = taskManager.getEpicByID(1);
+        assertEquals(epic1, epic2, "Равны задачи с одинаковым ID");
     }
+
     @Test
     void shouldSetName() {
         taskManager.getEpicByID(3).setName("Задача 3а");
