@@ -12,10 +12,10 @@ import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
 
-    private final HashMap<Integer, Task> tasks;
-    private final HashMap<Integer, Epic> epics;
-    private final HashMap<Integer, SubTask> subTasks;
-    private final HistoryManager historyManager;
+    protected final HashMap<Integer, Task> tasks;
+    protected final HashMap<Integer, Epic> epics;
+    protected final HashMap<Integer, SubTask> subTasks;
+    protected final HistoryManager historyManager;
 
 
     public InMemoryTaskManager(HistoryManager historyManager) {
@@ -117,7 +117,6 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateTask(Task task) { // Обновление обычной задачи
         if (tasks.containsKey(task.getId())) {
             tasks.put(task.getId(), task);
-            System.out.println("Задача обновлена!");
         }
     }
 
@@ -126,7 +125,6 @@ public class InMemoryTaskManager implements TaskManager {
         if (epics.containsKey(epic.getId())) {
             epics.get(epic.getId()).setName(epic.getName()); // изменение имени Эпика
             epics.get(epic.getId()).setDescription(epic.getDescription()); // изменение описания Эпика
-            System.out.println("Эпик обновлен!");
         }
     }
 
@@ -137,7 +135,6 @@ public class InMemoryTaskManager implements TaskManager {
             if (subTaskFromMap.getEpicId() == subTask.getEpicId()) {
                 subTasks.put(subTask.getId(), subTask);
                 changeEpicProgress(subTask.getEpicId());
-                System.out.println("Подзадача обновлена!");
             }
         }
     }

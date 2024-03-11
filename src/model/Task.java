@@ -9,7 +9,6 @@ public class Task {
     protected int id;
     protected Progress progress;
 
-
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
@@ -18,6 +17,10 @@ public class Task {
 
     public int getId() {
         return id;
+    }
+
+    public TaskType getType() {
+        return TaskType.TASK;
     }
 
     public String getName() {
@@ -30,6 +33,10 @@ public class Task {
 
     public Progress getProgress() {
         return progress;
+    }
+
+    public Integer getEpicId() {
+        return null;
     }
 
     public void setName(String name) {
