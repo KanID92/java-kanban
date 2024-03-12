@@ -25,7 +25,7 @@ public class InMemoryTaskManager implements TaskManager {
         this.subTasks = new HashMap<>();
     }
 
-    private int counter = 0;
+    protected int counter = 0;
 
     private int getId() {
         return ++counter;

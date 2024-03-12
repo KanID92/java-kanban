@@ -6,36 +6,15 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private final File autoSaveFile;
 
-    private int counter = 0;
-
     public FileBackedTaskManager(HistoryManager historyManager, File autoSaveFile) {
         super(historyManager);
         this.autoSaveFile = autoSaveFile;
-    }
-
-    private int getId() {
-        return ++counter;
-    }
-
-    public List<Task> getTaskList() { // геттер списка обычных задач
-        return super.getTaskList();
-    }
-
-    @Override
-    public ArrayList<Epic> getEpicList() { // геттер списка Эпиков
-        return super.getEpicList();
-    }
-
-    @Override
-    public ArrayList<SubTask> getSubtaskList() { // геттер списка подзадач
-        return super.getSubtaskList();
     }
 
     @Override
@@ -50,11 +29,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         Epic epic = super.getEpicByID(id);
         save();
         return epic;
-    }
-
-    @Override
-    public ArrayList<SubTask> getEpicSubtasks(int epicId) {
-        return super.getEpicSubtasks(epicId);
     }
 
     @Override
@@ -144,12 +118,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return super.getHistory();
     }
 
-    @Override
-    <T> void deleteTasksFromHistory(HashMap<Integer, T> map) {
-        super.deleteTasksFromHistory(map);
-        save();
-    }
-
     public String toString(Task task) {
         return task.getId() + "," + task.getType() + "," + task.getName() + "," + task.getProgress() + ","
                 + task.getDescription() + "," + task.getEpicId();
@@ -174,16 +142,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                                 fileBTManager.tasks.put(task.getId(), task);
                                 break;
                             case EPIC:
-                                Epic epic = new Epic(task.getName(), task.getDescription());
-                                epic.setId(task.getId());
-                                epic.setProgress(task.getProgress());
-                                fileBTManager.epics.put(epic.getId(), epic);
+                                fileBTManager.epics.put(task.getId(), (Epic) task);
                                 break;
                             case SUBTASK:
-                                SubTask subTask = new SubTask(task.getName(), task.getDescription(), task.getEpicId());
-                                subTask.setId(task.getId());
-                                subTask.setProgress(task.getProgress());
-                                fileBTManager.subTasks.put(subTask.getId(), subTask);
+                                fileBTManager.subTasks.put(task.getId(), (SubTask) task);
                                 break;
                         }
                         if (task.getId() > maxId) {
@@ -229,7 +191,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
 
-    static Task fromString(String value) {
+    public static Task fromString(String value) {
         String[] splitTaskString = value.split(",");
         int id = Integer.parseInt(splitTaskString[0]);
         TaskType tasktype = TaskType.valueOf(splitTaskString[1]); //Нужно сделать в верхнем регистре???

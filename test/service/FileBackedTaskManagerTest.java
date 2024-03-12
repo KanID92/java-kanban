@@ -68,11 +68,9 @@ public class FileBackedTaskManagerTest {
 
     @Test
     void shouldCreateAndLoadEmptyFile() {
-        FileBackedTaskManager taskManager2;
         File emptyFile;
         try {
             emptyFile = File.createTempFile("TestFile2", null);
-            taskManager2 = new FileBackedTaskManager(Managers.getDefaultHistory(), emptyFile);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -88,15 +86,11 @@ public class FileBackedTaskManagerTest {
 
     @Test
     void shouldLoadNotEmptyFile() {
-        FileBackedTaskManager taskManager4;
-        File file;
-        file = autosaveTestFile;
-        taskManager4 = FileBackedTaskManager.loadFromFile(file);
+        FileBackedTaskManager taskManager4 = FileBackedTaskManager.loadFromFile(autosaveTestFile);
         assertEquals(taskManager.getTaskList(), taskManager4.getTaskList());
         assertEquals(taskManager.getEpicList(), taskManager4.getEpicList());
         assertEquals(taskManager.getSubtaskList(), taskManager4.getSubtaskList());
         assertEquals(taskManager.getHistory(), taskManager4.getHistory());
-
     }
 
 }
