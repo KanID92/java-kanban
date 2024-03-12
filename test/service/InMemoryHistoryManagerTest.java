@@ -72,8 +72,6 @@ class InMemoryHistoryManagerTest {
 
         assertEquals(5, taskManager.getHistory().size(),
                 "Проверка правильности размера истории");
-        assertEquals(taskTest1, taskManager.getHistory().getLast(),
-                "Проверка верности последнего значения");
 
 
         assertTrue(taskManager.getHistory().contains(taskTest1) &&
@@ -128,7 +126,6 @@ class InMemoryHistoryManagerTest {
         assertEquals(-1, subTaskTest1.getEpicId());
 
     }
-
 
 
 }

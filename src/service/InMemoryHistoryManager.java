@@ -53,11 +53,12 @@ public class InMemoryHistoryManager implements HistoryManager {
     @Override
     public void remove(int id) {
         Node node = history.get(id);
-        if (node != null && history.containsValue(node)) {
+        if (node != null) {
             removeNode(node);
         }
     }
 
+    @Override
     public List<Task> getHistory() {
         ArrayList<Task> historyList = new ArrayList<>();
         Node current = first;
