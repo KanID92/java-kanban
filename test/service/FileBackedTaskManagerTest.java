@@ -1,8 +1,5 @@
 package service;
 
-import model.Epic;
-import model.SubTask;
-import model.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,59 +9,35 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class FileBackedTaskManagerTest {
+public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
 
     File autosaveTestFile = null;
-    FileBackedTaskManager taskManager = null;
 
+    @Override
     @BeforeEach
-    void beforeEach() {
+    void setBeforeEach() {
         try {
             autosaveTestFile = File.createTempFile("testFile", null);
         } catch (IOException e) {
             System.out.println("Ошибка при создании временного файла");
         }
         taskManager = new FileBackedTaskManager(Managers.getDefaultHistory(), autosaveTestFile);
-        taskManager.createTask(new Task("Тестовый таск №1", "Описание тестового таска №1"));
-        taskManager.createTask(new Task("Тестовый таск №2", "Описание тестового таска №2"));
-        taskManager.createEpic(new Epic("Тестовый эпик №3", "Описание тестового эпика №3"));
-        taskManager.createSubtask(new SubTask("Тестовая подзадача №4",
-                "Описание тестовой подзадачи №4", 3));
-        taskManager.createEpic(new Epic("Тестовый эпик №5", "Описание тестового эпика №5"));
-        taskManager.createSubtask(new SubTask("Тестовая подзадача №6",
-                "Описание тестовой подзадачи №6", 5));
-
-        Task taskForUpdate = new Task("Тестовый таск №2 (обновленный)",
-                "Описание тестового таска №2 (обновленное)");
-        taskForUpdate.setId(2);
-        taskManager.updateTask(taskForUpdate);
-
-        taskManager.createSubtask(new SubTask("Тестовая подзадача №6",
-                "Описание тестовой подзадачи №6", 5));
-        taskManager.createEpic(new Epic("Тестовый эпик №7", "Описание тестового эпика №7"));
-        taskManager.createSubtask(new SubTask("Тестовая подзадача №8",
-                "Описание тестовой подзадачи №8", 7));
-
-
-        taskManager.getEpicByID(3);
-        taskManager.getTaskByID(2);
-        taskManager.getSubtaskByID(6);
-
+        super.setBeforeEach();
     }
-
 
     @Test
     void shouldConvertToString() {
-        assertEquals("1,TASK,Тестовый таск №1,NEW,Описание тестового таска №1,null",
+        assertEquals("1,TASK,Тестовый таск №1,NEW,Описание тестового таска №1,null," +
+                        "2024.04.01 20:00,60,2024.04.01 21:00",
                 taskManager.toString(taskManager.getTaskByID(1)), "Проверка приведения Таска к строке");
     }
 
     @Test
-    void shouldConvertfromString() {
+    void shouldConvertFromString() {
         assertEquals(taskManager.getTaskByID(1), FileBackedTaskManager.fromString
-                ("1,TASK,Тестовый таск №1,NEW,Описание тестового таска №1,null)"));
+                ("1,TASK,Тестовый таск №1,NEW,Описание тестового таска №1,null," +
+                        "2024.04.01 20:00,60,2024.04.01 20:30"));
     }
-
 
     @Test
     void shouldCreateAndLoadEmptyFile() {

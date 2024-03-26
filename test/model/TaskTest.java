@@ -59,4 +59,9 @@ class TaskTest {
                 "Задача перенаименована");
     }
 
+    @Test
+    void shouldGetDuration() {
+        System.out.println(taskManager.getTaskByID(1).getDuration());
+    }
+
 }
