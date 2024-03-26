@@ -7,8 +7,15 @@ public class SubTask extends Task {
 
     private int epicId;
 
+    //конструктор без начала старта и продолжительности задачи
     public SubTask(String name, String description, int epicId) {
         super(name, description);
+        this.epicId = epicId;
+    }
+
+    //конструктор с началом старта задачи и продолжительностью задачи
+    public SubTask(String name, String description, int epicId, String startTime, int duration) {
+        super(name, description, startTime, duration);
         this.epicId = epicId;
     }
 
@@ -19,7 +26,6 @@ public class SubTask extends Task {
     @Override
     public Integer getEpicId() {
         return epicId;
-
     }
 
     @Override
@@ -36,6 +42,9 @@ public class SubTask extends Task {
                 ", id=" + id +
                 ", progress=" + progress +
                 ", epicId=" + epicId +
+                ", startTime=" + startTime +
+                ", duration=" + duration +
+                ", endTime=" + getEndTime() +
                 '}';
     }
 

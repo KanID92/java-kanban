@@ -64,9 +64,7 @@ class InMemoryHistoryManagerTest {
     @Test
     void shouldGetHistory() {
         ArrayList<Task> taskArrayList = new ArrayList<>();
-        for (Task task : taskManager.getHistory()) {
-            System.out.println(task);
-        }
+
         assertEquals(taskArrayList.getClass(), taskManager.getHistory().getClass(),
                 "Проверка правильности возвращаемого класса");
 
@@ -104,13 +102,28 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void shouldRemoveTaskFromHistory() {
-        taskManager.deleteSubtaskByID(subTaskTest1.getId());
-        List<Task> tasksHistory = taskManager.getHistory();
-        assertFalse(tasksHistory.contains(subTaskTest1));
-        assertEquals(tasksHistory.get(3), taskTest1, "Соседний справа элемент истории занял " +
+    void shouldRemoveTasksFromHistory() {
+        for (Task task : taskManager.getHistory()) {
+            System.out.println(task);
+        }
+        taskManager.deleteSubtaskByID(subTaskTest1.getId()); //удаление подзадачи из середины истории
+        List<Task> tasksHistory1 = taskManager.getHistory();
+        assertFalse(tasksHistory1.contains(subTaskTest1));
+        assertEquals(taskTest2, tasksHistory1.get(2), "Соседний справа элемент истории занял " +
                 "откорректированное положение");
-        assertEquals(tasksHistory.get(0), epicTest1, "Соседний слева элемент истории остался в том же положении");
+        assertEquals(epicTest1, tasksHistory1.get(0), "Соседний слева элемент истории остался в том же положении");
+
+        taskManager.deleteEpicByID(epicTest1.getId()); //удаление эпика из начала истории
+        List<Task> tasksHistory2 = taskManager.getHistory();
+        assertFalse(tasksHistory2.contains(epicTest1));
+        assertEquals(taskTest3, tasksHistory2.get(0), "Соседний справа элемент истории занял " +
+                "откорректированное положение");
+
+        taskManager.deleteTaskByID(taskTest1.getId()); //удаление эпика из начала истории
+        List<Task> tasksHistory3 = taskManager.getHistory();
+        assertFalse(tasksHistory3.contains(taskTest1));
+        assertEquals(taskTest2, tasksHistory3.get(1), "Соседний слева элемент истории " +
+                "остался в том же положении");
     }
 
     @Test
@@ -124,9 +137,25 @@ class InMemoryHistoryManagerTest {
     void shouldNotContainInDeletedSubtaskEpicID() {
         taskManager.deleteSubtaskByID(subTaskTest1.getId());
         assertEquals(-1, subTaskTest1.getEpicId());
-
     }
 
+    @Test
+    void shouldReturnEmptyHistory() {
+        TaskManager taskManager1 = Managers.getDefault();
+        assertTrue(taskManager1.getHistory().isEmpty());
+    }
+
+    @Test
+    void shouldNotDuplicateTasks() {
+        for (Task task : taskManager.getHistory()) {
+            System.out.println(task.getName() + ". ID: " + task.getId());
+        }
+        assertEquals(5, taskManager.getHistory().get(1).getId());
+        taskManager.getSubtaskByID(5);
+        assertNotEquals(5, taskManager.getHistory().get(1).getId());
+        assertEquals(5, taskManager.getHistory().get(4).getId());
+    }
 
 }
+
 
