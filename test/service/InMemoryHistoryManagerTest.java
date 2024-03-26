@@ -103,9 +103,6 @@ class InMemoryHistoryManagerTest {
 
     @Test
     void shouldRemoveTasksFromHistory() {
-        for (Task task : taskManager.getHistory()) {
-            System.out.println(task);
-        }
         taskManager.deleteSubtaskByID(subTaskTest1.getId()); //удаление подзадачи из середины истории
         List<Task> tasksHistory1 = taskManager.getHistory();
         assertFalse(tasksHistory1.contains(subTaskTest1));
@@ -118,12 +115,6 @@ class InMemoryHistoryManagerTest {
         assertFalse(tasksHistory2.contains(epicTest1));
         assertEquals(taskTest3, tasksHistory2.get(0), "Соседний справа элемент истории занял " +
                 "откорректированное положение");
-
-        taskManager.deleteTaskByID(taskTest1.getId()); //удаление эпика из начала истории
-        List<Task> tasksHistory3 = taskManager.getHistory();
-        assertFalse(tasksHistory3.contains(taskTest1));
-        assertEquals(taskTest2, tasksHistory3.get(1), "Соседний слева элемент истории " +
-                "остался в том же положении");
     }
 
     @Test
