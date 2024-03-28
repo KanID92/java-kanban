@@ -4,7 +4,6 @@ import java.util.Objects;
 
 public class SubTask extends Task {
 
-
     private int epicId;
 
     //конструктор без начала старта и продолжительности задачи
@@ -58,10 +57,12 @@ public class SubTask extends Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SubTask subTask = (SubTask) o;
-        return id == subTask.id && Objects.equals(name, subTask.name) &&
-                Objects.equals(description, subTask.description) &&
-                progress == subTask.progress &&
-                epicId == subTask.epicId;
+        return id == subTask.id && Objects.equals(name, subTask.name)
+                && Objects.equals(description, subTask.description)
+                && progress == subTask.progress
+                && epicId == subTask.epicId
+                && Objects.equals(startTime, subTask.startTime)
+                && Objects.equals(duration, subTask.duration);
     }
 
 }

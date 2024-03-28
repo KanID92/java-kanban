@@ -123,10 +123,29 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     public String toString(Task task) {
+        String startTime;
+        Long duration;
+        String endTime;
+        if (task.getStartTime() != null) {
+            startTime = task.getStartTime().format(task.getDateTimeFormat());
+        } else {
+            startTime = null;
+        }
+        if (task.getDuration() != null) {
+            duration = task.getDuration().toMinutes();
+        } else {
+            duration = null;
+        }
+
+        if (task.getEndTime() != null) {
+            endTime = task.getEndTime().format(task.getDateTimeFormat());
+        } else {
+            endTime = null;
+        }
+
         return task.getId() + "," + task.getType() + "," + task.getName() + "," + task.getProgress() + ","
                 + task.getDescription() + "," + task.getEpicId() + ","
-                + task.getStartTime().format(task.getDateTimeFormat()) + ","
-                + task.getDuration().toMinutes() + "," + task.getEndTime().format(task.getDateTimeFormat());
+                + startTime + "," + duration + "," + endTime;
     }
 
     static FileBackedTaskManager loadFromFile(File autoSaveFile) { // восстановление данных менеджера
@@ -146,12 +165,18 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                         switch (task.getType()) {
                             case TASK:
                                 fileBTManager.tasks.put(task.getId(), task);
+                                if (task.getStartTime() != null) {
+                                    fileBTManager.prioritySet.add(task);
+                                }
                                 break;
                             case EPIC:
                                 fileBTManager.epics.put(task.getId(), (Epic) task);
                                 break;
                             case SUBTASK:
                                 fileBTManager.subTasks.put(task.getId(), (SubTask) task);
+                                if (task.getStartTime() != null) {
+                                    fileBTManager.prioritySet.add(task);
+                                }
                                 break;
                         }
                         if (task.getId() > maxId) {
@@ -167,6 +192,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 for (SubTask subTask : fileBTManager.getSubtaskList()) {
                     int epicId = subTask.getEpicId();
                     fileBTManager.epics.get(epicId).addSubtaskIdToEpic(subTask.getId());
+                }
+
+                for (Epic epic : fileBTManager.getEpicList()) {
+                    fileBTManager.changeEpicProgress(epic.getId());
+                    fileBTManager.changeEpicTimeAndDuration(epic.getId());
                 }
 
                 for (int historyTask : historyFromString(historyString)) { // Восстановление наполнения менеджера истории
@@ -205,11 +235,26 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         String name = splitTaskString[2];
         Progress progress = Progress.valueOf(splitTaskString[3]);
         String description = splitTaskString[4];
-        LocalDateTime startTime = LocalDateTime.parse(splitTaskString[6],
-                DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));
-        Duration duration = Duration.ofMinutes(Integer.parseInt(splitTaskString[7]));
-        LocalDateTime endTime = LocalDateTime.parse(splitTaskString[8],
-                DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));
+        LocalDateTime startTime;
+        Duration duration;
+        LocalDateTime endTime;
+        if (splitTaskString[6].equals("null")) {
+            startTime = null;
+        } else {
+            startTime = LocalDateTime.parse(splitTaskString[6],
+                    DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));
+        }
+        if (splitTaskString[7].equals("null")) {
+            duration = null;
+        } else {
+            duration = Duration.ofMinutes(Integer.parseInt(splitTaskString[7]));
+        }
+        if (splitTaskString[8].equals("null")) {
+            endTime = null;
+        } else {
+            endTime = LocalDateTime.parse(splitTaskString[8],
+                    DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));
+        }
 
         Task task = null;
 
@@ -225,7 +270,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 task = new Epic(name, description);
                 task.setId(id);
                 task.setProgress(progress);
-                task.setEndTime(endTime);
+                task.setStartTime(startTime);
+                task.setDuration(duration);
+                ((Epic) task).setEndTime(endTime);
                 break;
             case SUBTASK:
                 task = new SubTask(name, description, Integer.parseInt(splitTaskString[5]));
@@ -235,6 +282,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 task.setDuration(duration);
                 break;
         }
+
 
         return task;
     }

@@ -11,8 +11,8 @@ public class Task {
     protected String description;
     protected int id;
     protected Progress progress;
-    protected LocalDateTime startTime = LocalDateTime.MAX; //TODO
-    protected Duration duration = Duration.ZERO;
+    protected LocalDateTime startTime;
+    protected Duration duration;
     protected DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
 
     //конструктор без начала старта и продолжительности задачи
@@ -20,6 +20,8 @@ public class Task {
         this.name = name;
         this.description = description;
         this.progress = Progress.NEW;
+        this.startTime = null;
+        this.duration = null;
     }
 
     //конструктор с началом старта задачи и продолжительностью задачи
@@ -68,7 +70,11 @@ public class Task {
     }
 
     public LocalDateTime getEndTime() {
-        return startTime.plus(duration);
+        if (startTime == null) {
+            return null;
+        } else {
+            return startTime.plus(duration);
+        }
     }
 
     public void setName(String name) {
@@ -95,9 +101,6 @@ public class Task {
         this.duration = duration;
     }
 
-    public void setEndTime(LocalDateTime endTime) {
-    }
-
 
     @Override
     public boolean equals(Object o) {
@@ -105,7 +108,8 @@ public class Task {
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
         return id == task.id && Objects.equals(name, task.name) && Objects.equals(description, task.description)
-                && progress == task.progress;
+                && progress == task.progress && Objects.equals(startTime, task.startTime)
+                && Objects.equals(duration, task.duration);
     }
 
     @Override

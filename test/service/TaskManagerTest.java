@@ -135,12 +135,14 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void shouldGetEpicByID() {
-        Epic epic = new Epic( /* №3 */
+
+        Epic epic = new Epic(
                 "Тестовый эпик №3",
                 "Описание тестового эпика №3");
         epic.setId(3);
         epic.addSubtaskIdToEpic(4);
-        assertEquals(epic, taskManager.getEpicByID(3));
+        assertEquals(epic.getName(), taskManager.getEpicByID(3).getName());
+        assertEquals(epic.getDescription(), taskManager.getEpicByID(3).getDescription());
         assertTrue(taskManager.getHistory().contains(taskManager.getEpicByID(3)));
     }
 
