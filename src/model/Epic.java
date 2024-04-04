@@ -1,10 +1,13 @@
 package model;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
 
 
 public class Epic extends Task {
+
+    protected LocalDateTime endTime = null;
 
     protected ArrayList<Integer> subtaskIDs = new ArrayList<>();
 
@@ -28,6 +31,15 @@ public class Epic extends Task {
         subtaskIDs.clear();
     }
 
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
+    @Override
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
     @Override
     public TaskType getType() {
         return TaskType.EPIC;
@@ -41,6 +53,9 @@ public class Epic extends Task {
                 ", id=" + id +
                 ", progress=" + progress +
                 ", subtaskIds=" + subtaskIDs +
+                ", startTime=" + startTime +
+                ", duration=" + duration +
+                ", endTime=" + endTime +
                 '}';
     }
 
@@ -54,11 +69,14 @@ public class Epic extends Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Epic epic = (Epic) o;
-        return id == epic.id && Objects.equals(name, epic.name) &&
-                Objects.equals(description, epic.description) &&
-                progress == epic.progress &&
-                Objects.equals(subtaskIDs, epic.subtaskIDs);
+        return id == epic.id
+                && Objects.equals(name, epic.name)
+                && Objects.equals(description, epic.description)
+                && progress == epic.progress
+                && Objects.equals(subtaskIDs, epic.subtaskIDs)
+                && Objects.equals(startTime, epic.startTime)
+                && Objects.equals(duration, epic.duration)
+                && Objects.equals(endTime, epic.endTime);
     }
-
 }
 
