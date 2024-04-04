@@ -194,11 +194,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     fileBTManager.epics.get(epicId).addSubtaskIdToEpic(subTask.getId());
                 }
 
-                for (Epic epic : fileBTManager.getEpicList()) {
-                    fileBTManager.changeEpicProgress(epic.getId());
-                    fileBTManager.changeEpicTimeAndDuration(epic.getId());
-                }
-
                 for (int historyTask : historyFromString(historyString)) { // Восстановление наполнения менеджера истории
                     if (fileBTManager.getTaskFromMap(historyTask) != null) {
                         fileBTManager.historyManager.add(fileBTManager.getTaskFromMap(historyTask));

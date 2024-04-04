@@ -176,8 +176,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllEpics() {  //удаление всех Эпиков
-        prioritySet.removeIf(task -> task.getType() == TaskType.SUBTASK
-                || task.getType() == TaskType.EPIC);
+        prioritySet.removeIf(task -> task.getType() == TaskType.SUBTASK);
         deleteTasksFromHistory(subTasks);
         deleteTasksFromHistory(epics);
         subTasks.clear(); //удаление всех подзадач
@@ -277,7 +276,7 @@ public class InMemoryTaskManager implements TaskManager {
         Duration epicDuration = Duration.ZERO;
         LocalDateTime epicEndTime = LocalDateTime.MIN;
         ArrayList<SubTask> epicSubtasks = getEpicSubtasks(epicId);
-        if (epicSubtasks != null) {
+        if (!epicSubtasks.isEmpty()) {
             for (SubTask subTask : epicSubtasks) {
                 if (subTask.getStartTime() != null) {
                     if (subTask.getStartTime().isBefore(epicStartTime)) {

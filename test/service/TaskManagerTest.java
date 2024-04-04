@@ -172,7 +172,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void shouldGetEpicEndTime() {
-        assertEquals("2024.07.03 23:20", taskManager.getEpicByID(7).getEndTime()
+        assertEquals("2024.09.03 21:00", taskManager.getEpicByID(7).getEndTime()
                 .format(taskManager.getEpicByID(7).getDateTimeFormat()));
     }
 
