@@ -46,8 +46,8 @@ public class TaskHandler implements HttpHandler {
                     }
                     break;
                 case "POST":
-                    String taskStr = new String
-                            (httpExchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
+                    String taskStr = new String(
+                            httpExchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
                     if (id == -1) {
                         manager.createTask(gson.fromJson(taskStr, Task.class));
                         httpExchange.sendResponseHeaders(201, 0);

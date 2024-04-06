@@ -44,14 +44,14 @@ public class EpicHandler extends TaskHandler implements HttpHandler {
                     }
                     break;
                 case "POST":
-                    String EpicStr = new String
-                            (httpExchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
+                    String epicStr = new String(
+                            httpExchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
                     if (id == -1) {
-                        manager.createEpic(gson.fromJson(EpicStr, Epic.class));
+                        manager.createEpic(gson.fromJson(epicStr, Epic.class));
                         httpExchange.sendResponseHeaders(201, 0);
 
                     } else {
-                        manager.updateEpic(gson.fromJson(EpicStr, Epic.class));
+                        manager.updateEpic(gson.fromJson(epicStr, Epic.class));
                         httpExchange.sendResponseHeaders(201, 0);
                     }
                     break;

@@ -50,12 +50,12 @@ public class HttpTaskServer {
 
     public static void main(String[] args) {
         HttpTaskServer httpServer = new HttpTaskServer(Managers.getDefault());
-        manager.createTask(new Task( /* №1 */
+        manager.createTask(new Task(/* №1 */
                 "Тестовый таск №1",
                 "Описание тестового таска №1",
                 "2024.04.01 20:00",
                 60));
-        manager.createTask(new Task( /* №1 */
+        manager.createTask(new Task(/* №2 */
                 "Тестовый таск №2",
                 "Описание тестового таска №12",
                 "2024.05.01 21:00",
