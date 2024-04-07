@@ -15,7 +15,7 @@ class TaskTest {
     void beforeEach() {
         taskManager.createTask(new Task("Задача 1", "Задача 1 для теста"));
         taskManager.createTask(new Task("Задача 2", "Задача 2 для теста"));
-        taskManager.createTask(new Task("Задача 3", "Задача 3 для теста", "2024.03.29 08:30", 180));
+        taskManager.createTask(new Task("Задача 3", "Задача 3 для теста", "2024-03-29T08:30", 180));
         taskManager.getTaskByID(3).setName("Задача 3а");
     }
 

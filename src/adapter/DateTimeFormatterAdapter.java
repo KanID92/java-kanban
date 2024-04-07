@@ -11,7 +11,7 @@ public class DateTimeFormatterAdapter extends TypeAdapter<DateTimeFormatter> {
 
     @Override
     public void write(final JsonWriter jsonWriter, final DateTimeFormatter dateTimeFormatter) throws IOException {
-        jsonWriter.value("yyyy.MM.dd HH:mm");
+        jsonWriter.value("yyyy-MM-dd HH:mm");
     }
 
     @Override

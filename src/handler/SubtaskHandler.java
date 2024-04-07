@@ -3,6 +3,8 @@ package handler;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import exceptions.BadRequestException;
+import exceptions.NotFoundException;
 import model.SubTask;
 import service.TaskManager;
 
@@ -31,22 +33,32 @@ public class SubtaskHandler extends TaskHandler implements HttpHandler {
                     if (id == -1) {
                         String response = gson.toJson(manager.getSubtaskList());
                         writeGetResponse(httpExchange, response);
-                    } else {
-                        String response = gson.toJson(manager.getSubtaskByID(id));
+                        break;
+                    }
+                    SubTask subTaskToGet = manager.getSubtaskByID(id);
+                    if (subTaskToGet != null) {
+                        String response = gson.toJson(subTaskToGet);
                         writeGetResponse(httpExchange, response);
+                    } else {
+                        throw new NotFoundException("Эпик с id:" + id + " не найден");
                     }
                     break;
                 case "POST":
-                    String subtaskStr = new String(
-                            httpExchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
-                    if (id == -1) {
-                        manager.createSubtask(gson.fromJson(subtaskStr, SubTask.class));
-                        System.out.println("Подзадача добавлена");
-                        httpExchange.sendResponseHeaders(201, 0);
+                    if (httpExchange.getRequestBody().available() != 0) {
+                        String subtaskStr = new String(
+                                httpExchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
+                        SubTask postSubtask = gson.fromJson(subtaskStr, SubTask.class);
+                        if (postSubtask.getId() == 0) {
+                            manager.createSubtask(postSubtask);
+                            System.out.println("Подзадача добавлена");
+                            httpExchange.sendResponseHeaders(201, 0);
+                        } else {
+                            manager.updateSubtask(postSubtask);
+                            System.out.println("Задача обновлена");
+                            httpExchange.sendResponseHeaders(201, 0);
+                        }
                     } else {
-                        manager.updateSubtask(gson.fromJson(subtaskStr, SubTask.class));
-                        System.out.println("Задача обновлена");
-                        httpExchange.sendResponseHeaders(201, 0);
+                        throw new BadRequestException("Пустое тело запроса");
                     }
                     break;
                 case "DELETE":

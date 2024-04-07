@@ -28,7 +28,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
     @Test
     void shouldConvertToString() {
         assertEquals("1,TASK,Тестовый таск №1,NEW,Описание тестового таска №1,null," +
-                        "2024.04.01 20:00,60,2024.04.01 21:00",
+                        "2024-04-01T20:00:00,60,2024-04-01T21:00:00",
                 taskManager.toString(taskManager.getTaskByID(1)), "Проверка приведения Таска к строке");
     }
 
@@ -36,7 +36,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
     void shouldConvertFromString() {
         assertEquals(taskManager.getTaskByID(1), FileBackedTaskManager.fromString
                 ("1,TASK,Тестовый таск №1,NEW,Описание тестового таска №1,null," +
-                        "2024.04.01 20:00,60,2024.04.01 20:30"));
+                        "2024-04-01T20:00:00,60,2024-04-01T20:30:00"));
     }
 
     @Test

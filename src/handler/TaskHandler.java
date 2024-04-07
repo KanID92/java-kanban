@@ -3,6 +3,8 @@ package handler;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import exceptions.BadRequestException;
+import exceptions.NotFoundException;
 import model.Task;
 import service.TaskManager;
 
@@ -12,10 +14,10 @@ import java.nio.charset.StandardCharsets;
 
 public class TaskHandler implements HttpHandler {
 
-    Gson gson;
-    TaskManager manager;
-    Charset charset;
-    ExceptionHandler exceptionHandler;
+    final Gson gson;
+    final TaskManager manager;
+    final Charset charset;
+    final ExceptionHandler exceptionHandler;
 
     public TaskHandler(TaskManager manager, Gson gson, Charset charset) {
         this.manager = manager;
@@ -39,21 +41,30 @@ public class TaskHandler implements HttpHandler {
                     if (id == -1) {
                         String response = gson.toJson(manager.getTaskList());
                         writeGetResponse(httpExchange, response);
-                    } else {
-                        Task task = manager.getTaskByID(id);
-                        String response = gson.toJson(manager.getTaskByID(id));
+                        break;
+                    }
+                    Task taskToGet = manager.getTaskByID((id));
+                    if (taskToGet != null) {
+                        String response = gson.toJson(taskToGet);
                         writeGetResponse(httpExchange, response);
+                    } else {
+                        throw new NotFoundException("Задача с id:" + id + " не найдена");
                     }
                     break;
                 case "POST":
-                    String taskStr = new String(
+                    if (httpExchange.getRequestBody().available() != 0) {
+                        String taskStr = new String(
                             httpExchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
-                    if (id == -1) {
-                        manager.createTask(gson.fromJson(taskStr, Task.class));
-                        httpExchange.sendResponseHeaders(201, 0);
+                        Task postTask = gson.fromJson(taskStr, Task.class);
+                        if (postTask.getId() == 0) {
+                            manager.createTask(postTask);
+                            httpExchange.sendResponseHeaders(201, 0);
+                        } else {
+                            manager.updateTask(postTask);
+                            httpExchange.sendResponseHeaders(201, 0);
+                        }
                     } else {
-                        manager.updateTask(gson.fromJson(taskStr, Task.class));
-                        httpExchange.sendResponseHeaders(201, 0);
+                        throw new BadRequestException("Пустое тело запроса");
                     }
                     break;
                 case "DELETE":

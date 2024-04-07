@@ -26,6 +26,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -36,8 +37,8 @@ public class HttpTaskServerTest {
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
     HttpTaskServer httpServer;
-    static TaskManager manager;
-    static Gson gson;
+    TaskManager manager;
+    Gson gson;
 
     @BeforeEach
     void init() {
@@ -52,7 +53,7 @@ public class HttpTaskServerTest {
         Task testTask1 = new Task( /* №1 */
                 "Тестовый таск ID№2",
                 "Описание тестового таска №1",
-                "2024.05.01 20:00",
+                "2024-05-01T20:00:00",
                 60);
         manager.createTask(testTask1);
 
@@ -63,12 +64,12 @@ public class HttpTaskServerTest {
 
         SubTask subTask3 = new SubTask( /* №3 */
                 "Тестовая подзадача. ID№3",
-                "Описание тестовой подзадачи №3", testEpic2.getId(), "2024.10.02 01:00", 600);
+                "Описание тестовой подзадачи №3", testEpic2.getId(), "2024-10-02T01:00:00", 600);
         manager.createSubtask(subTask3);
 
         SubTask subTask4 = new SubTask( /* №4 */
                 "Тестовая подзадача. ID№4",
-                "Описание тестовой подзадачи №4", testEpic2.getId(), "2024.07.05 14:00", 130);
+                "Описание тестовой подзадачи №4", testEpic2.getId(), "2024-07-05T14:00:00", 130);
         manager.createSubtask(subTask4);
 
         manager.getTaskByID(1);
@@ -94,7 +95,8 @@ public class HttpTaskServerTest {
         HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
 
-        final List<Task> taskList = gson.fromJson(response.body(), new TaskListTypeToken().getType());
+        final List<Task> taskList = gson.fromJson(response.body(), new TypeToken<ArrayList<Task>>() {
+        }.getType());
 
         assertNotNull(taskList);
         assertEquals(manager.getTaskList().size(), taskList.size(), "Проверка размера листа");
@@ -144,7 +146,8 @@ public class HttpTaskServerTest {
         HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
 
-        final List<Epic> epicList = gson.fromJson(response.body(), new EpicListTypeToken().getType());
+        final List<Epic> epicList = gson.fromJson(response.body(), new TypeToken<ArrayList<Epic>>() {
+        }.getType());
 
         assertNotNull(epicList);
         assertEquals(manager.getEpicList().size(), epicList.size(), "Проверка размера листа");
@@ -197,7 +200,8 @@ public class HttpTaskServerTest {
         HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
 
-        final List<SubTask> subTaskList = gson.fromJson(response.body(), new SubtaskListTypeToken().getType());
+        final List<SubTask> subTaskList = gson.fromJson(response.body(), new TypeToken<ArrayList<SubTask>>() {
+        }.getType());
 
         assertNotNull(subTaskList);
         assertEquals(manager.getSubtaskList().size(), subTaskList.size(), "Проверка размера листа");
@@ -249,7 +253,8 @@ public class HttpTaskServerTest {
         HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
 
-        final List<Task> historyList = gson.fromJson(response.body(), new TaskListTypeToken().getType());
+        final List<Task> historyList = gson.fromJson(response.body(), new TypeToken<ArrayList<Task>>() {
+        }.getType());
 
         assertNotNull(historyList);
         assertEquals(manager.getHistory().size(), historyList.size(), "Проверка размера листа");
@@ -268,7 +273,8 @@ public class HttpTaskServerTest {
         HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
 
-        final List<Task> prioritizedList = gson.fromJson(response.body(), new TaskListTypeToken().getType());
+        final List<Task> prioritizedList = gson.fromJson(response.body(), new TypeToken<ArrayList<Task>>() {
+        }.getType());
 
         assertNotNull(prioritizedList);
         assertEquals(manager.getPrioritizedTasks().size(), prioritizedList.size(), "Проверка размера листа");
@@ -276,15 +282,5 @@ public class HttpTaskServerTest {
         assertEquals(manager.getTaskByID(1), task1, "Проверка идентичности таска");
     }
 
-    class TaskListTypeToken extends TypeToken<List<Task>> {
 
-    }
-
-    class EpicListTypeToken extends TypeToken<List<Epic>> {
-
-    }
-
-    class SubtaskListTypeToken extends TypeToken<List<SubTask>> {
-
-    }
 }

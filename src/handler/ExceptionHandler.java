@@ -2,7 +2,9 @@ package handler;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
+import exceptions.BadRequestException;
 import exceptions.ManagerSaveException;
+import exceptions.NotFoundException;
 import exceptions.ValidationException;
 
 import java.io.IOException;
@@ -27,6 +29,16 @@ public class ExceptionHandler { //Обрабатывает исключения 
 
     public void handle(HttpExchange exchange, NumberFormatException e) throws IOException {
         System.out.println("Получен неверный формат идентификатора.");
+        writeResponse(exchange, gson.toJson(e), 400);
+    }
+
+    public void handle(HttpExchange exchange, NotFoundException e) throws IOException {
+        System.out.println("Задача не найдена.");
+        writeResponse(exchange, gson.toJson(e), 404);
+    }
+
+    public void handle(HttpExchange exchange, BadRequestException e) throws IOException {
+        System.out.println("Пустое тело запроса");
         writeResponse(exchange, gson.toJson(e), 400);
     }
 

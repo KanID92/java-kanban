@@ -3,6 +3,8 @@ package handler;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import exceptions.BadRequestException;
+import exceptions.NotFoundException;
 import model.Epic;
 import service.TaskManager;
 
@@ -35,24 +37,36 @@ public class EpicHandler extends TaskHandler implements HttpHandler {
                     if (id == -1) {
                         String response = gson.toJson(manager.getEpicList());
                         writeGetResponse(httpExchange, response);
-                    } else if (!isEpicSubtasksNeed) {
-                        String response = gson.toJson(manager.getEpicByID((id)));
-                        writeGetResponse(httpExchange, response);
+                        break;
+                    }
+
+                    Epic epicToGet = manager.getEpicByID((id));
+                    if (epicToGet != null) {
+                        if (!isEpicSubtasksNeed) {
+                            String response = gson.toJson(epicToGet);
+                            writeGetResponse(httpExchange, response);
+                        } else {
+                            String response = gson.toJson(manager.getEpicSubtasks((id)));
+                            writeGetResponse(httpExchange, response);
+                        }
                     } else {
-                        String response = gson.toJson(manager.getEpicSubtasks((id)));
-                        writeGetResponse(httpExchange, response);
+                        throw new NotFoundException("Эпик с id:" + id + " не найден");
                     }
                     break;
                 case "POST":
-                    String epicStr = new String(
-                            httpExchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
-                    if (id == -1) {
-                        manager.createEpic(gson.fromJson(epicStr, Epic.class));
-                        httpExchange.sendResponseHeaders(201, 0);
-
+                    if (httpExchange.getRequestBody().available() != 0) {
+                        String epicStr = new String(
+                                httpExchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
+                        Epic postEpic = gson.fromJson(epicStr, Epic.class);
+                        if (postEpic.getId() == 0) {
+                            manager.createEpic(postEpic);
+                            httpExchange.sendResponseHeaders(201, 0);
+                        } else {
+                            manager.updateEpic(postEpic);
+                            httpExchange.sendResponseHeaders(201, 0);
+                        }
                     } else {
-                        manager.updateEpic(gson.fromJson(epicStr, Epic.class));
-                        httpExchange.sendResponseHeaders(201, 0);
+                        throw new BadRequestException("Пустое тело запроса");
                     }
                     break;
                 case "DELETE":

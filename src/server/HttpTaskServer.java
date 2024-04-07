@@ -26,11 +26,11 @@ public class HttpTaskServer {
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
     HttpServer httpServer;
-    static TaskManager manager;
-    static Gson gson;
+    private final TaskManager manager;
+    private final Gson gson;
 
     public HttpTaskServer(TaskManager manager) {
-        HttpTaskServer.manager = manager;
+        this.manager = manager;
         gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
                 .registerTypeAdapter(Duration.class, new DurationAdapter())
@@ -50,15 +50,15 @@ public class HttpTaskServer {
 
     public static void main(String[] args) {
         HttpTaskServer httpServer = new HttpTaskServer(Managers.getDefault());
-        manager.createTask(new Task(/* №1 */
+        httpServer.manager.createTask(new Task(/* №1 */
                 "Тестовый таск №1",
                 "Описание тестового таска №1",
-                "2024.04.01 20:00",
+                "2024-04-01T20:00:00",
                 60));
-        manager.createTask(new Task(/* №2 */
+        httpServer.manager.createTask(new Task(/* №2 */
                 "Тестовый таск №2",
                 "Описание тестового таска №12",
-                "2024.05.01 21:00",
+                "2024-05-01T21:00:00",
                 800));
 
         httpServer.start();

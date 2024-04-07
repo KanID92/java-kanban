@@ -237,7 +237,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             startTime = null;
         } else {
             startTime = LocalDateTime.parse(splitTaskString[6],
-                    DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));
+                    DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         }
         if (splitTaskString[7].equals("null")) {
             duration = null;
@@ -248,7 +248,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             endTime = null;
         } else {
             endTime = LocalDateTime.parse(splitTaskString[8],
-                    DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));
+                    DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         }
 
         Task task = null;

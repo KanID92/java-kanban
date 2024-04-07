@@ -21,12 +21,12 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.createTask(new Task( /* №1 */
                 "Тестовый таск №1",
                 "Описание тестового таска №1",
-                "2024.04.01 20:00",
+                "2024-04-01T20:00",
                 60)); //1
         taskManager.createTask(new Task( /* №2 */
                 "Тестовый таск №2",
                 "Описание тестового таска №2",
-                "2024.04.03 22:00",
+                "2024-04-03T22:00",
                 120)); //2
         taskManager.createEpic(new Epic( /* №3 */
                 "Тестовый эпик №3",
@@ -35,7 +35,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
                 "Тестовая подзадача №4",
                 "Описание тестовой подзадачи №4",
                 3,
-                "2024.04.06 21:30",
+                "2024-04-06T21:30",
                 150)); //4
         taskManager.createEpic(new Epic( /* №5 */
                 "Тестовый эпик №5",
@@ -44,7 +44,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
                 "Тестовая подзадача №6",
                 "Описание тестовой подзадачи №6",
                 5,
-                "2024.03.29 08:30",
+                "2024-03-29T08:30",
                 15));
         taskManager.createEpic(new Epic( /* №7 */
                 "Тестовый эпик №7",
@@ -57,18 +57,18 @@ public abstract class TaskManagerTest<T extends TaskManager> {
                 "Тестовая подзадача №9",
                 "Описание тестовой подзадачи №9",
                 7,
-                "2024.07.03 19:00",
+                "2024-07-03T19:00",
                 200));
         taskManager.createSubtask(new SubTask( /* №10 */
                 "Тестовая подзадача №10",
                 "Описание тестовой подзадачи №10",
                 7,
-                "2024.09.03 20:00",
+                "2024-09-03T20:00",
                 60));
 
         //обновление задач
         Task taskForUpdate = new Task("Тестовый таск №2 (обновленный)",
-                "Описание тестового таска №2 (обновленное)", "2024.04.02 21:00", 120);
+                "Описание тестового таска №2 (обновленное)", "2024-04-02T21:00", 120);
         taskForUpdate.setId(2);
         taskManager.updateTask(taskForUpdate);
 
@@ -126,7 +126,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Task task = new Task(
                 "Тестовый таск №1",
                 "Описание тестового таска №1",
-                "2024.04.01 20:00",
+                "2024-04-01T20:00",
                 60);
         task.setId(1);
         assertEquals(task, taskManager.getTaskByID(1));
@@ -152,7 +152,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
                 "Тестовая подзадача №4",
                 "Описание тестовой подзадачи №4",
                 3,
-                "2024.04.06 21:30",
+                "2024-04-06T21:30",
                 150);
         subtask.setId(4);
         assertEquals(subtask, taskManager.getSubtaskByID(4));
@@ -161,7 +161,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void shouldGetEpicStartTime() {
-        assertEquals("2024.07.03 19:00", taskManager.getEpicByID(7).getStartTime()
+        assertEquals("2024-07-03T19:00:00", taskManager.getEpicByID(7).getStartTime()
                 .format(taskManager.getEpicByID(7).getDateTimeFormat()));
     }
 
@@ -172,7 +172,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void shouldGetEpicEndTime() {
-        assertEquals("2024.09.03 21:00", taskManager.getEpicByID(7).getEndTime()
+        assertEquals("2024-09-03T21:00:00", taskManager.getEpicByID(7).getEndTime()
                 .format(taskManager.getEpicByID(7).getDateTimeFormat()));
     }
 
@@ -220,7 +220,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Task task = new Task(
                 "TaskIntersectionTask",
                 "TaskIntersectionTask description",
-                "2024.03.31 23:00",
+                "2024-03-31T23:00",
                 1440);
         Assertions.assertThrows(ValidationException.class, () -> taskManager.createTask(task));
     }
