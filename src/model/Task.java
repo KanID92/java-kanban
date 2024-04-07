@@ -13,7 +13,7 @@ public class Task {
     protected Progress progress;
     protected LocalDateTime startTime;
     protected Duration duration;
-    protected DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
+    private final DateTimeFormatter dtf = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
     //конструктор без начала старта и продолжительности задачи
     public Task(String name, String description) {

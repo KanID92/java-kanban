@@ -138,9 +138,6 @@ class InMemoryHistoryManagerTest {
 
     @Test
     void shouldNotDuplicateTasks() {
-        for (Task task : taskManager.getHistory()) {
-            System.out.println(task.getName() + ". ID: " + task.getId());
-        }
         assertEquals(5, taskManager.getHistory().get(1).getId());
         taskManager.getSubtaskByID(5);
         assertNotEquals(5, taskManager.getHistory().get(1).getId());

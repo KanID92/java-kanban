@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import service.Managers;
 import service.TaskManager;
 
+import java.time.Duration;
+
 class TaskTest {
     TaskManager taskManager = Managers.getDefault();
 
@@ -13,7 +15,7 @@ class TaskTest {
     void beforeEach() {
         taskManager.createTask(new Task("Задача 1", "Задача 1 для теста"));
         taskManager.createTask(new Task("Задача 2", "Задача 2 для теста"));
-        taskManager.createTask(new Task("Задача 3", "Задача 3 для теста"));
+        taskManager.createTask(new Task("Задача 3", "Задача 3 для теста", "2024-03-29T08:30", 180));
         taskManager.getTaskByID(3).setName("Задача 3а");
     }
 
@@ -56,12 +58,13 @@ class TaskTest {
     void shouldSetName() {
         taskManager.getTaskByID(3).setName("Задача 3а");
         Assertions.assertEquals("Задача 3а", taskManager.getTaskByID(3).getName(),
-                "Задача перенаименована");
+                "Задача переименована");
     }
 
     @Test
     void shouldGetDuration() {
-        System.out.println(taskManager.getTaskByID(1).getDuration());
+        Assertions.assertNull(taskManager.getTaskByID(1).getDuration());
+        Assertions.assertEquals(Duration.ofMinutes(180), taskManager.getTaskByID(3).getDuration());
     }
 
 }
